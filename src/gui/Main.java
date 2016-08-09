@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -15,10 +16,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import logic.Person;
+
 public class Main extends JFrame{
     private JTextField txtNachname;
-    private JTextField textField_2;
     private JTextField txtEmail;
+    private JTextField txtVorname;
+    private JTextField txtTelefon;
+    private ArrayList<Person> pListe = null;
 
     public Main() {
         getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -33,6 +38,8 @@ public class Main extends JFrame{
         JLabel lblNachname = new JLabel("Nachname:");
         
         JLabel lblEmail = new JLabel("E-Mail:");
+        
+        JLabel lblTelefon = new JLabel("Telefon:");
         GroupLayout gl_panel = new GroupLayout(panel);
         gl_panel.setHorizontalGroup(
             gl_panel.createParallelGroup(Alignment.LEADING)
@@ -48,6 +55,10 @@ public class Main extends JFrame{
                     .addContainerGap()
                     .addComponent(lblEmail)
                     .addContainerGap(37, Short.MAX_VALUE))
+                .addGroup(gl_panel.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lblTelefon)
+                    .addContainerGap(29, Short.MAX_VALUE))
         );
         gl_panel.setVerticalGroup(
             gl_panel.createParallelGroup(Alignment.LEADING)
@@ -58,47 +69,51 @@ public class Main extends JFrame{
                     .addComponent(lblNachname)
                     .addGap(27)
                     .addComponent(lblEmail)
-                    .addContainerGap(144, Short.MAX_VALUE))
+                    .addGap(28)
+                    .addComponent(lblTelefon)
+                    .addContainerGap(79, Short.MAX_VALUE))
         );
         panel.setLayout(gl_panel);
         
         JPanel panel_1 = new JPanel();
         getContentPane().add(panel_1, BorderLayout.EAST);
         
-        txtEmail = new JTextField();
-        txtEmail.setColumns(10);
+        txtVorname = new JTextField();
+        txtVorname.setColumns(10);
         
         txtNachname = new JTextField();
         txtNachname.setColumns(10);
         
-        textField_2 = new JTextField();
-        textField_2.setColumns(10);
+        txtEmail = new JTextField();
+        txtEmail.setColumns(10);
+        
+        txtTelefon = new JTextField();
+        txtTelefon.setColumns(10);
         GroupLayout gl_panel_1 = new GroupLayout(panel_1);
         gl_panel_1.setHorizontalGroup(
-            gl_panel_1.createParallelGroup(Alignment.LEADING)
+            gl_panel_1.createParallelGroup(Alignment.TRAILING)
                 .addGroup(gl_panel_1.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(Alignment.TRAILING, gl_panel_1.createSequentialGroup()
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtNachname, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
+                    .addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
+                        .addComponent(txtTelefon, GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                        .addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+                            .addComponent(txtVorname, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNachname, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)))
                     .addContainerGap())
-                .addGroup(gl_panel_1.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         gl_panel_1.setVerticalGroup(
             gl_panel_1.createParallelGroup(Alignment.LEADING)
                 .addGroup(gl_panel_1.createSequentialGroup()
                     .addGap(51)
-                    .addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtVorname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addGap(27)
                     .addComponent(txtNachname, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addGap(18)
-                    .addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(172, Short.MAX_VALUE))
+                    .addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addGap(18)
+                    .addComponent(txtTelefon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(79, Short.MAX_VALUE))
         );
         panel_1.setLayout(gl_panel_1);
         
@@ -106,10 +121,27 @@ public class Main extends JFrame{
         getContentPane().add(panel_2, BorderLayout.SOUTH);
         
         JButton btnAnzeigen = new JButton("Anzeigen");
+        btnAnzeigen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+                schowPersons(pListe);
+            }
+        });
         
         JButton btnAdd = new JButton("Anlegen");
         btnAdd.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                
+                // TODO: add Pattern!
+                String vorname = txtVorname.getText().trim();
+                String nachname = txtNachname.getText().trim();
+                String email = txtEmail.getText().trim();
+                String telefon = txtTelefon.getText().trim();
+                
+                Person p = addPerson(vorname, nachname, email, telefon);
+                
+                System.out.println(p);
+                
             }
         });
         GroupLayout gl_panel_2 = new GroupLayout(panel_2);
@@ -143,6 +175,21 @@ public class Main extends JFrame{
         this.setResizable(false);
         this.setLocationRelativeTo(null);
     }
+    
+    protected void schowPersons(ArrayList<Person> pListe) {
+       // if (pListe != null) {
+          PersonenListe pL =  new PersonenListe();       
+        //}
+        
+    }
+
+    private Person addPerson(String vorname, String nachname, String email, String telefon) {
+        Person p = new Person(vorname, nachname, email, telefon);
+        
+        return p;
+    }
+    
+    
 
     public static void main(String[] args) {
         new Main().setVisible(true);
